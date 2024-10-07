@@ -1,4 +1,4 @@
-from animoFeatures import feature_extract
+from .animoFeatures import feature_extract
 from ..src.model import Autoencoder
 from ..src.dataset import MyAutoencoderDataset
 
