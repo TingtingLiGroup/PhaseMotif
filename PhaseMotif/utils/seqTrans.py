@@ -4,8 +4,8 @@ import os
 
 # 文件路径
 current_dir = os.path.dirname(__file__)
-AMINO2VECTOR_DICT_PATH = os.path.join(current_dir, '../dicts/amino2Vector_dict.pkl')
-AMINO2ALPHA_DICT_PATH = os.path.join(current_dir, '../dicts/amino2Alpha_dict.pkl')
+AMINO2VECTOR_DICT_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/amino2Vector_dict.pkl'))
+AMINO2ALPHA_DICT_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/amino2Alpha_dict.pkl'))
 
 
 def seq2Matrix(seq, method):           # 输入IDR序列 输出氨基酸矩阵

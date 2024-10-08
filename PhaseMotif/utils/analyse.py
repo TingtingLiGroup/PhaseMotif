@@ -10,7 +10,8 @@ import os
 # important_position2animo(important_position, x)
 # 文件路径
 current_dir = os.path.dirname(__file__)
-VECTOR2AMINO_DICT_PATH = os.path.join(current_dir, '../dicts/vector2amino_dict.pkl')
+VECTOR2AMINO_DICT_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/vector2amino_dict.pkl'))
+
 
 # ==================================== explain_afterbgp ========================================= #
 def explain_afterbgp(all_gradient):

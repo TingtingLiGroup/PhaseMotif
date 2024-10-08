@@ -15,7 +15,7 @@ from .utils.checkGenerate import calculate_distance
 
 # 文件路径
 current_dir = os.path.dirname(__file__)
-MODEL_PATH = os.path.join(current_dir, 'model_save/8.pth')
+MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
 
 # 混合了原文件中predict、importance、特征提取和聚类分类cluster
 def cluster(seq_list):

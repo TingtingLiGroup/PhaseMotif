@@ -7,7 +7,7 @@ import os
 
 # 文件路径
 current_dir = os.path.dirname(__file__)
-ONEHOT2ALPHABET_MATRIX_PATH = os.path.join(current_dir, '../dicts/onehot2alphabet_matrix.txt')
+ONEHOT2ALPHABET_MATRIX_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/onehot2alphabet_matrix.txt'))
 
 
 class Encoder(nn.Module):

@@ -12,10 +12,10 @@ import os
 
 # 文件路径
 current_dir = os.path.dirname(__file__)
-AUTOENCODER_MODEL_PATH = os.path.join(current_dir, '../model_save/autoencoder_model.pth')
-UMAP_MODEL_PATH = os.path.join(current_dir, '../model_save/umap_model.joblib')
-MEANINGFUL_FEATURES_PATH = os.path.join(current_dir, '../dicts/meaningful_features.txt')
-SMALL_UMAP_CLUSTER_HUGE_PATH = os.path.join(current_dir, '../dicts/small_umap_cluster_huge.csv')
+AUTOENCODER_MODEL_PATH = os.path.abspath(os.path.join(current_dir, '../model_save/autoencoder_model.pth'))
+UMAP_MODEL_PATH = os.path.abspath(os.path.join(current_dir, '../model_save/umap_model.joblib'))
+MEANINGFUL_FEATURES_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/meaningful_features.txt'))
+SMALL_UMAP_CLUSTER_HUGE_PATH = os.path.abspath(os.path.join(current_dir, '../dicts/small_umap_cluster_huge.csv'))
 
 # Load the Autoencoder model
 autoencoder = Autoencoder(input_dim=207)
