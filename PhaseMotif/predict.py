@@ -31,11 +31,20 @@ def cluster(seq_list):
     return label_result
 
 
-def analyse_main(idr_list):
+def analyse_main(idr_list, idr_name=None, paint=False):
     """
     :param idr_list: str list, the IDR sequence
+    :param idr_name: str list, whether to automatically name the idr in the result
+    :param paint: bool, whether to draw the result
     :return: 单个位点的密度、序列被选中的次数密度、重要位点的选择、类别的标签
     """
+    if idr_name is None:
+        idr_name_list = [f'IDR_{index}' for index in range(len(idr_list))]
+    else:
+        if len(idr_name) != len(idr_list):
+            raise ValueError("The lengths of 'idr_name' and 'idr_list' do not match.")
+        idr_name_list = idr_name
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     load_path = MODEL_PATH
 
@@ -49,7 +58,7 @@ def analyse_main(idr_list):
     os.makedirs('PM_analyse', exist_ok=True)
 
     analyse_result_df = []
-    for idr in idr_list:
+    for idr, idr_name in zip(idr_list, idr_name_list):
         # 检查idr的长度
         if len(idr) < 50:
             raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
@@ -82,9 +91,13 @@ def analyse_main(idr_list):
         seq = [i for i in seq if i != '']
         cluster_label = cluster(seq)
 
-        analyse_result_df.append([idr, density, choose_result, times, cluster_label])
+        analyse_result_df.append([idr_name, idr, density, choose_result, times, cluster_label, seq])
 
-    analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label'])
+    analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR Name', 'IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label', 'Seq'])
+    save_df = analyse_result_df.loc[:, ['IDR Name', 'IDR', 'Seq', 'Cluster_label']]
+    save_df = save_df.explode(['Seq', 'Cluster_label']).reset_index(drop=True)
+    save_df.to_csv('PM_analyse/PM_analyse_result.csv', index=False)
+
     return analyse_result_df
 
 
