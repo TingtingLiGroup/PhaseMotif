@@ -69,6 +69,9 @@ def pic(idr_name, idr, density, times, choose_result):
     ax2.xaxis.tick_top()  # 将x轴刻度设置在顶部
     ax2.grid(False)
 
+    # Adjust subplot parameters to increase spacing
+    plt.subplots_adjust(hspace=0.2)
+
     plt.savefig(f'PM_analyse/Pic_result/{idr_name}.png')
     plt.close()
 
