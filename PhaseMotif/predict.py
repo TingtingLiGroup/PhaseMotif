@@ -17,6 +17,7 @@ from .utils.checkGenerate import calculate_distance
 current_dir = os.path.dirname(__file__)
 MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
 
+
 # 混合了原文件中predict、importance、特征提取和聚类分类cluster
 def cluster(seq_list):
     features = caculate_features(seq_list)
@@ -103,9 +104,6 @@ def predict_main(idr_list):
     return predict_result_list
 
 
-idr_list = ['MATLEKLMKAFESLKSFQQQQQQQQQQQQQQQQQQQQQPPPPPPPPPPPQLPQPPPQAQPLLPQPQPPPPPPPPPPGPAVAEEPLHRPKKEL', 'QQQQQQQQQQQQQQQQQQQQQPPPPPPPPPPPQLPQPPPQAQPLLPQPQPPPPPPPPPPGPAVAEEPLHRPKKEL']
-print(predict_main(idr_list))
-print(analyse_main(idr_list))
 
 
     
