@@ -45,6 +45,8 @@ def analyse_main(idr_list, idr_name=None, paint=False):
             raise ValueError("The lengths of 'idr_name' and 'idr_list' do not match.")
         idr_name_list = idr_name
 
+    os.makedirs('PM_analyse', exist_ok=True)
+
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     load_path = MODEL_PATH
 
@@ -54,8 +56,6 @@ def analyse_main(idr_list, idr_name=None, paint=False):
     model.to(device)
     model.eval()
     gdp = GuidedBackprop(model)
-
-    os.makedirs('PM_analyse', exist_ok=True)
 
     analyse_result_df = []
     for idr, idr_name in zip(idr_list, idr_name_list):
@@ -93,18 +93,19 @@ def analyse_main(idr_list, idr_name=None, paint=False):
 
         analyse_result_df.append([idr_name, idr, density, choose_result, times, cluster_label, seq])
 
-    analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR Name', 'IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label', 'Seq'])
-    save_df = analyse_result_df.loc[:, ['IDR Name', 'IDR', 'Seq', 'Cluster_label']]
+    analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR Name', 'IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label', 'Key Region'])
+    save_df = analyse_result_df.loc[:, ['IDR Name', 'IDR', 'Key Region', 'Cluster_label']]
     save_df = save_df.explode(['Seq', 'Cluster_label']).reset_index(drop=True)
     save_df.to_csv('PM_analyse/PM_analyse_result.csv', index=False)
 
     return analyse_result_df
 
 
-def predict_main(idr_list):
+def predict_main(idr_list, idr_name=None):
     """Predict the result of the IDR"""
     """
     :param idr_list: str list, the IDR sequence
+    :param idr_name: str list, whether to automatically name the idr in the result
     :return: predict_result, float, the predict result
     """
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -114,8 +115,17 @@ def predict_main(idr_list):
     model.to(device)
     model.eval()
 
+    os.makedirs('PM_analyse', exist_ok=True)
+
+    if idr_name is None:
+        idr_name_list = [f'IDR_{index}' for index in range(len(idr_list))]
+    else:
+        if len(idr_name) != len(idr_list):
+            raise ValueError("The lengths of 'idr_name' and 'idr_list' do not match.")
+        idr_name_list = idr_name
+
     predict_result_list = []
-    for idr in idr_list:
+    for idr, idr_name in zip(idr_list, idr_name_list):
         # 检查idr的长度
         if len(idr) < 50:
             raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
@@ -126,7 +136,11 @@ def predict_main(idr_list):
         data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
         result = model([data_one_hot], [data_alphabet], device)
         predict_result = torch.sigmoid(result[0]).item()
-        predict_result_list.append(predict_result)
+
+        predict_result_list.append([idr_name, idr, predict_result])
+
+    predict_result_list = pd.DataFrame(predict_result_list, columns=['IDR Name', 'IDR', 'Predict Score'])
+    predict_result_list.to_csv('PM_analyse/PM_predict_result.csv', index=False)
 
     return predict_result_list
 
