@@ -16,6 +16,7 @@ from .utils.checkGenerate import calculate_distance
 # 文件路径
 current_dir = os.path.dirname(__file__)
 MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
+AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
 
 
 # 混合了原文件中predict、importance、特征提取和聚类分类cluster
@@ -47,6 +48,12 @@ def analyse_main(idr_list):
 
     analyse_result_df = []
     for idr in idr_list:
+        # 检查idr的长度
+        if len(idr) < 50:
+            raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
+        # 检查idr的字符是否属于字符列表animo
+        if not all(char in AMINO for char in idr):
+            raise ValueError(f"Error: The IDR '{idr}' contains characters not in AMINO.")
         data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
         data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
         label = torch.tensor([1]).float()
@@ -94,7 +101,12 @@ def predict_main(idr_list):
 
     predict_result_list = []
     for idr in idr_list:
-        # print(idr)
+        # 检查idr的长度
+        if len(idr) < 50:
+            raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
+        # 检查idr的字符是否属于字符列表animo
+        if not all(char in AMINO for char in idr):
+            raise ValueError(f"Error: The IDR '{idr}' contains characters not in AMINO.")
         data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
         data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
         result = model([data_one_hot], [data_alphabet], device)
