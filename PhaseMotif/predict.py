@@ -1,14 +1,14 @@
 import torch
-from .src.model import PredictMain
-from .utils.seqTrans import seq2Matrix
 import pandas as pd
 import os
 import sys
 import json
+import matplotlib.pyplot as plt
 
+from .src.model import PredictMain
 from .src.model import AnalyseMain
 from .src.guided_backpro import GuidedBackprop
-
+from .utils.seqTrans import seq2Matrix
 from .utils.checkGenerate import caculate_features
 from .utils.checkGenerate import auto_encoding_umap
 from .utils.checkGenerate import calculate_distance
@@ -19,7 +19,6 @@ MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
 AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
 
 
-# 混合了原文件中predict、importance、特征提取和聚类分类cluster
 def cluster(seq_list):
     features = caculate_features(seq_list)
     umap_result = auto_encoding_umap(features)
@@ -29,6 +28,46 @@ def cluster(seq_list):
     label_result = [label[int(i)] for i in label_result]
 
     return label_result
+
+
+def pic(idr_name, idr, density, times, choose_result):
+    """Draw the result of the IDR"""
+    """
+    :param idr_name: str, the IDR name
+    :param idr: str, the IDR sequence
+    :param density: list, the density of each position
+    :param choose_result: list, the number of times each position is selected
+    :param times: list, the density of each position being selected
+    :return: None
+    """
+    all_list = list(range(len(idr)))
+    # 创建图形和子图
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(int(len(all_list) / 9), 3),
+                                   gridspec_kw={'height_ratios': [1, 1]})
+    # 画折线图
+    ax1.plot(all_list, density, marker='o')
+    ax1.set_xticks(all_list)
+    ax1.set_xticklabels(list(idr))
+    ax1.set_ylabel('Density', fontsize=15)
+    ax1.set_title(idr_name, fontsize=18)
+    ax1.grid(False)
+
+    # 画垂直线
+    for x in choose_result:
+        ax1.axvline(x=x, color='r', linestyle='--')
+
+    # 画折线图
+    ax2.bar(all_list, times)
+    ax2.set_xticks(all_list)
+    ax2.set_xticklabels(list(idr))
+    ax2.set_ylabel('Times', fontsize=15)
+    ax2.invert_yaxis()  # 倒置y轴
+    ax2.xaxis.set_label_position('top')  # 将x轴标签位置设置在顶部
+    ax2.xaxis.tick_top()  # 将x轴刻度设置在顶部
+    ax2.grid(False)
+
+    plt.savefig(f'PM_analyse/Pic_result/{idr_name}.png')
+    plt.close()
 
 
 def analyse_main(idr_list, idr_name=None, paint=False):
@@ -46,6 +85,9 @@ def analyse_main(idr_list, idr_name=None, paint=False):
         idr_name_list = idr_name
 
     os.makedirs('PM_analyse', exist_ok=True)
+
+    if paint:
+        os.makedirs('PM_analyse/Pic_result', exist_ok=True)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     load_path = MODEL_PATH
@@ -85,7 +127,10 @@ def analyse_main(idr_list, idr_name=None, paint=False):
         density = [i / max(density) for i in density]
         times = [position.count(i) / sum(position) for i in all_list]
         times = [i / max(times) for i in times]
-        choose_result = [list(set(choose_result)).count(i) for i in all_list]
+        # choose_result = [list(set(choose_result)).count(i) for i in all_list]
+
+        if paint:
+            pic(idr_name, idr, density, times, choose_result)
 
         seq = seq.split('_')
         seq = [i for i in seq if i != '']
@@ -95,7 +140,7 @@ def analyse_main(idr_list, idr_name=None, paint=False):
 
     analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR Name', 'IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label', 'Key Region'])
     save_df = analyse_result_df.loc[:, ['IDR Name', 'IDR', 'Key Region', 'Cluster_label']]
-    save_df = save_df.explode(['Seq', 'Cluster_label']).reset_index(drop=True)
+    save_df = save_df.explode(['Key Region', 'Cluster_label']).reset_index(drop=True)
     save_df.to_csv('PM_analyse/PM_analyse_result.csv', index=False)
 
     return analyse_result_df
