@@ -13,8 +13,9 @@ setup(
         'umap-learn',
         'matplotlib',
         'seaborn',
-        'scipy',
+        'scipy=1.10',
+        'joblib',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 
 )
