@@ -88,6 +88,9 @@ def analyse_main(idr_list, idr_name=None, paint=False):
     else:
         if len(idr_name) != len(idr_list):
             raise ValueError("The lengths of 'idr_name' and 'idr_list' do not match.")
+        for item in idr_name:
+            if not isinstance(item, str) or item == '':
+                raise ValueError("All elements of 'idr_name' must be non-empty strings.")
         idr_name_list = idr_name
 
     os.makedirs('PM_analyse', exist_ok=True)
@@ -173,6 +176,9 @@ def predict_main(idr_list, idr_name=None):
     else:
         if len(idr_name) != len(idr_list):
             raise ValueError("The lengths of 'idr_name' and 'idr_list' do not match.")
+        for item in idr_name:
+            if not isinstance(item, str) or item == '':
+                raise ValueError("All elements of 'idr_name' must be non-empty strings.")
         idr_name_list = idr_name
 
     predict_result_list = []
