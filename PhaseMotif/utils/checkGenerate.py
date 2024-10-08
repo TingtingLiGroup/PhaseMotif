@@ -8,21 +8,29 @@ import numpy as np
 from torch.utils.data import DataLoader
 import pandas as pd
 import umap.umap_ as umap
+import os
+
+# 文件路径
+current_dir = os.path.dirname(__file__)
+AUTOENCODER_MODEL_PATH = os.path.join(current_dir, '../model_save/autoencoder_model.pth')
+UMAP_MODEL_PATH = os.path.join(current_dir, '../model_save/umap_model.joblib')
+MEANINGFUL_FEATURES_PATH = os.path.join(current_dir, '../dicts/meaningful_features.txt')
+SMALL_UMAP_CLUSTER_HUGE_PATH = os.path.join(current_dir, '../dicts/small_umap_cluster_huge.csv')
 
 # Load the Autoencoder model
 autoencoder = Autoencoder(input_dim=207)
-autoencoder.load_state_dict(torch.load('../model_save/autoencoder_model.pth'))
+autoencoder.load_state_dict(torch.load(AUTOENCODER_MODEL_PATH))
 autoencoder.eval()
 
 # Load the UMAP model
-reducer = joblib.load('../model_save/umap_model.joblib')
+reducer = joblib.load(UMAP_MODEL_PATH)
 
 # 读取需要使用的列
-with open('../dicts/meaningful_features.txt', 'r') as file:
+with open(MEANINGFUL_FEATURES_PATH, 'r') as file:
     meaningful_features = [line.strip() for line in file]
 
 # 读取过去的umap分类
-existing_umap = pd.read_csv('../dicts/small_umap_cluster_huge.csv', index_col=None)
+existing_umap = pd.read_csv(SMALL_UMAP_CLUSTER_HUGE_PATH, index_col=None)
 
 
 # 提取特征的函数

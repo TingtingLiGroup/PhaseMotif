@@ -2,12 +2,15 @@ import numpy as np
 import math
 from collections import Counter
 import pickle
+import os
 
 # explain_afterbgp(all_gradient)
 # explain_Spp(before_SPPData, need_index, gradient_dic, n_large)  # n_large并没有用
 # explain_Attention(attention_score, attention_value, need_index, n_large1, n_large2)
 # important_position2animo(important_position, x)
-
+# 文件路径
+current_dir = os.path.dirname(__file__)
+VECTOR2AMINO_DICT_PATH = os.path.join(current_dir, '../dicts/vector2amino_dict.pkl')
 
 # ==================================== explain_afterbgp ========================================= #
 def explain_afterbgp(all_gradient):
@@ -236,7 +239,7 @@ def matrix2seq(array, dic):
 
 
 def important_position2animo(important_position, x):
-    f_read = open('Python/dicts/vector2amino_dict.pkl', 'rb')
+    f_read = open(VECTOR2AMINO_DICT_PATH, 'rb')
     vector2amino_dict = pickle.load(f_read)
     f_read.close()
 

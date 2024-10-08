@@ -2,6 +2,7 @@ import torch
 from .src.model import PredictMain
 from .utils.seqTrans import seq2Matrix
 import pandas as pd
+import os
 import sys
 import json
 
@@ -12,6 +13,9 @@ from .utils.checkGenerate import caculate_features
 from .utils.checkGenerate import auto_encoding_umap
 from .utils.checkGenerate import calculate_distance
 
+# 文件路径
+current_dir = os.path.dirname(__file__)
+MODEL_PATH = os.path.join(current_dir, 'model_save/8.pth')
 
 # 混合了原文件中predict、importance、特征提取和聚类分类cluster
 def cluster(seq_list):
@@ -31,7 +35,7 @@ def analyse_main(idr_list):
     :return: 单个位点的密度、序列被选中的次数密度、重要位点的选择、类别的标签
     """
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    load_path = 'model_save/8.pth'
+    load_path = MODEL_PATH
 
     model = AnalyseMain(cnn1out_channel=8, cnn1kernel=15, cnn1stride=1, cnn1padding=(0, 1), num_head=8,
                         head_size=8, value_size=1, num_level=12)
@@ -83,7 +87,7 @@ def predict_main(idr_list):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # print(device)
     model = PredictMain(cnn1out_channel=8, cnn1kernel=15, cnn1stride=1, cnn1padding=(0, 1), num_head=8, head_size=8, value_size=1, num_level=12)
-    model.load_state_dict(torch.load('model_save/8.pth', map_location=device))
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.to(device)
     model.eval()
 

@@ -2,6 +2,12 @@ import torch
 from torch import nn
 import numpy as np
 import torch.nn.functional as F
+import os
+
+
+# 文件路径
+current_dir = os.path.dirname(__file__)
+ONEHOT2ALPHABET_MATRIX_PATH = os.path.join(current_dir, '../dicts/onehot2alphabet_matrix.txt')
 
 
 class Encoder(nn.Module):
@@ -33,7 +39,7 @@ class Encoder(nn.Module):
 
     def forward(self, one_hot):
         # print('one-hot',one_hot.shape)
-        onehot2alpha_matrix = np.loadtxt('dicts/onehot2alphabet_matrix.txt', dtype=int)
+        onehot2alpha_matrix = np.loadtxt(ONEHOT2ALPHABET_MATRIX_PATH, dtype=int)
         onehot2alpha_matrix = torch.from_numpy(onehot2alpha_matrix).float()
         onehot2alpha_matrix = onehot2alpha_matrix.cuda(0)
 
