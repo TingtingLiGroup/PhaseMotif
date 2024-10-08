@@ -46,6 +46,8 @@ def analyse_main(idr_list):
     model.eval()
     gdp = GuidedBackprop(model)
 
+    os.makedirs('PM_analyse', exist_ok=True)
+
     analyse_result_df = []
     for idr in idr_list:
         # 检查idr的长度
