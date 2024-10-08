@@ -58,25 +58,24 @@ def calculate_double_protion(str, special_char):
     return 2 * counts / len(str)
 
 
-import pandas as pd
-from multiprocessing import Pool
-
+# from multiprocessing import Pool
 
 # Assuming find_rich function is defined elsewhere
 
-def check_richness(row, rich_all_list, window_size_min=15, rich_percent=0.5):
-    feature_idr = row['feature_idr']
-    temp_result = [row['index'], row['gene'], feature_idr]
-    for rich in rich_all_list:
-        temp_rich = 1 if find_rich(feature_idr, rich, window_size_min, rich_percent) else 0
-        temp_result.append(temp_rich)
-    return temp_result
+# def check_richness(row, rich_all_list, window_size_min=15, rich_percent=0.5):  # 多线程
+#     feature_idr = row['feature_idr']
+#     temp_result = [row['index'], row['gene'], feature_idr]
+#     for rich in rich_all_list:
+#         temp_rich = 1 if find_rich(feature_idr, rich, window_size_min, rich_percent) else 0
+#         temp_result.append(temp_rich)
+#     return temp_result
 
 
-def parallel_apply(df, func, rich_all_list, num_processes):
-    with Pool(num_processes) as pool:
-        results = pool.starmap(func, [(row, rich_all_list) for _, row in df.iterrows()])
-    return results
+# def parallel_apply(df, func, rich_all_list, num_processes):  # 多线程
+#     with Pool(num_processes) as pool:
+#         results = pool.starmap(func, [(row, rich_all_list) for _, row in df.iterrows()])
+#     return results
+
 
 def feature_extract(feature_data, feature_type):
     """
@@ -121,11 +120,26 @@ def feature_extract(feature_data, feature_type):
     rich_all_list += rich_by_another_classify
     columns_for_all += columns_for_another_classify
 
-    if feature_type == 'rich':  # rich
-        num_processes = 4
-        results = parallel_apply(feature_data, check_richness, rich_all_list, num_processes)
-        columns = ['index', 'gene', 'feature_idr'] + [f'rich_{x}' for x in columns_for_all]
-        result = pd.DataFrame(results, columns=columns)
+    # if feature_type == 'rich':  # rich 多线程
+    #     num_processes = 4
+    #     results = parallel_apply(feature_data, check_richness, rich_all_list, num_processes)
+    #     columns = ['index', 'gene', 'feature_idr'] + [f'rich_{x}' for x in columns_for_all]
+    #     result = pd.DataFrame(results, columns=columns)
+    #     return result
+
+    if feature_type == 'rich':  # rich 单线程
+        for _, row in feature_data.iterrows():
+            index = row['index']
+            feature_idr = row['feature_idr']
+            gene = row['gene']
+            columns = ['index', 'gene', 'feature_idr']
+            temp_result = [index, gene, feature_idr]
+            for rich in rich_all_list:
+                temp_rich = 1 if find_rich(feature_idr, rich, 15, 0.5) else 0
+                temp_result.append(temp_rich)
+            result.append(temp_result)
+        columns += [f'rich_{x}' for x in columns_for_all]
+        result = pd.DataFrame(result, columns=columns)
         return result
 
     if feature_type == 'portion':  # 各种元素在在feature中占的比例
