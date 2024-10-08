@@ -70,7 +70,7 @@ def pic(idr_name, idr, density, times, choose_result):
     ax2.grid(False)
 
     # Adjust subplot parameters to increase spacing
-    plt.subplots_adjust(hspace=0.2)
+    plt.subplots_adjust(hspace=0.3)
 
     plt.savefig(f'PM_analyse/Pic_result/{idr_name}.png')
     plt.close()
