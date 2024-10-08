@@ -1,0 +1,3 @@
+recursive-include PhaseMotif/dicts *
+recursive-include PhaseMotif/fake_data *
+recursive-include PhaseMotif/model_save *
