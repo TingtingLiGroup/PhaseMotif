@@ -4,6 +4,10 @@ from utils.seqTrans import seq2Matrix
 import pandas as pd
 import sys
 import json
+import joblib
+print(joblib.__version__)
+UMAP_MODEL_PATH = 'model_save/umap_model.joblib'
+reducer = joblib.load(UMAP_MODEL_PATH)
 
 def predict_main(idr_list):
     """Predict the result of the IDR"""
