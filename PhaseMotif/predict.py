@@ -52,6 +52,9 @@ def pic(idr_name, idr, density, times, choose_result):
     ax1.set_title(idr_name, fontsize=18)
     ax1.grid(False)
 
+    # Remove tick lines
+    ax1.tick_params(axis='x', length=0)
+
     # 画垂直线
     for x in choose_result:
         ax1.axvline(x=x, color='r', linestyle='--')
