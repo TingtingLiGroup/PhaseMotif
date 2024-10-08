@@ -5,7 +5,7 @@ setup(
     packages=find_namespace_packages(),
     include_package_data=True,
     install_requires=[
-        'torch',
+        'torch>=2.0',
         'torchvision',
         'pandas',
         'numpy',
