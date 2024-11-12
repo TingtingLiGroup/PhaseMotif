@@ -12,7 +12,7 @@ conda activate myenv
 pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu121
 
 # Step 4: Clone the PhaseMotif repository from GitHub
-git clone https://github.com/yanghongchhy/PhaseMotif.git
+git clone https://github.com/TingtingLiGroup/PhaseMotif.git
 
 # Step 5: Navigate into the cloned repository directory
 cd PhaseMotif
