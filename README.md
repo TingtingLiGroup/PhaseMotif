@@ -1,3 +1,9 @@
+# Introduction to PhaseMotif
+PhaseMotif is an innovative online platform designed for predicting phase separation (PS) of intrinsically disordered regions (IDRs) in proteins and nucleic acids. Phase separation is crucial for the formation of biomolecular condensates, which play key roles in regulating cellular activities such as gene expression and signal transduction. This repository provides the source code for PhaseMotif, enabling researchers to explore and analyze key regions within IDRs that drive phase separation.
+
+To make it even easier to use, please visit the [PhaseMotif Website](http://predict.phasemotif.pro/)
+
+
 # Install
 
 ```bash
