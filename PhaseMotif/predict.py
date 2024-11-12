@@ -16,7 +16,7 @@ from .utils.checkGenerate import calculate_distance
 # 文件路径
 current_dir = os.path.dirname(__file__)
 MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
-AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y', 'U']
 
 
 def cluster(seq_list):
