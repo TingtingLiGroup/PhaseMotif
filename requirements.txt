@@ -28,7 +28,7 @@ numba==0.58.1
 numpy==1.24.3
 packaging==24.1
 pandas==2.0.3
-PhaseMotif==0.1
+PhaseMotif==1.0
 pillow==10.4.0
 platformdirs==4.2.2
 pynndescent==0.5.11
