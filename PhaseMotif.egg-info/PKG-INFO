@@ -32,7 +32,7 @@ Requires-Dist: numba==0.58.1
 Requires-Dist: numpy==1.24.3
 Requires-Dist: packaging==24.1
 Requires-Dist: pandas==2.0.3
-Requires-Dist: PhaseMotif==0.1
+Requires-Dist: PhaseMotif==1.0
 Requires-Dist: pillow==10.4.0
 Requires-Dist: platformdirs==4.2.2
 Requires-Dist: pynndescent==0.5.11

@@ -112,13 +112,13 @@ def analyse_main(idr_list, idr_name=None, paint=False):
     for idr, idr_name in zip(idr_list, idr_name_list):
         # 检查idr的长度
         if len(idr) < 50:
-            error_msg = f"Error: The length of IDR is less than 50."
+            error_msg = f"Error: The length of {idr} is less than 50."
             print(error_msg)
             analyse_result_df.append([idr_name, idr, [], [], [], [], []])
             continue  # 跳过当前循环，处理下一个
         # 检查idr的字符是否属于字符列表AMINO
         if not all(char in AMINO for char in idr):
-            error_msg = f"Error: IDR contains characters not in AMINO."
+            error_msg = f"Error: {idr} contains characters not in AMINO."
             print(error_msg)
             analyse_result_df.append([idr_name, idr, [], [], [], [], []])
             continue  # 跳过当前循环，处理下一个
@@ -210,14 +210,14 @@ def predict_main(idr_list, idr_name=None):
         try:
             # 检查idr的长度
             if len(idr) < 50:
-                error_msg = f"Error: The length of IDR is less than 50."
+                error_msg = f"Error: The length of {idr} is less than 50."
                 print(error_msg)
                 predict_result_list.append([idr_name, idr, error_msg])
                 continue  # 跳过当前循环，处理下一个
 
             # 检查idr的字符是否属于字符列表AMINO
             if not all(char in AMINO for char in idr):
-                error_msg = f"Error: IDR contains characters not in AMINO."
+                error_msg = f"Error: {idr} contains characters not in AMINO."
                 print(error_msg)
                 predict_result_list.append([idr_name, idr, error_msg])
                 continue  # 跳过当前循环，处理下一个
