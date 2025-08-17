@@ -28,6 +28,79 @@ python setup.py install
 ```
 
 
+# Run with Docker (GPU)
+
+If you do not want to configure CUDA and dependencies manually, you can directly use our prebuilt **Docker image**.
+ The image already includes pretrained weights under `/app/model_save`, so it works out of the box.
+
+### Pull the image
+
+```
+docker pull ghcr.io/tingtingligroup/phasemotif:latest
+```
+
+### Interactive Python session
+
+```
+docker run --rm -it --gpus all ghcr.io/tingtingligroup/phasemotif:latest
+```
+
+Inside Python:
+
+```
+import PhaseMotif as pm
+
+idr_list = [
+    "MSVAKTPKTAENAEGGGGGGGGPPPPPPPKPHVNVGTIGPHEDTYYSEF",
+    "GPTLSEDNLSYYKSQPGFQKMSADK"
+]
+idr_name = ["IDR1", "IDR2"]
+
+# Analyse
+pm.analyse_main(idr_list)
+pm.analyse_main(idr_list, idr_name, paint=True)
+
+# Predict
+df = pm.predict_main(idr_list, idr_name)
+print(df)
+```
+
+### Run a one-liner script
+
+**Linux/macOS:**
+
+```
+docker run --rm --gpus all ghcr.io/tingtingligroup/phasemotif:latest - <<'PY'
+import PhaseMotif as pm
+idr_list = ["MSVAKTPKTAENAEGGGGGGGGPPPPPPPKPHVNVGTIGPHEDTYYSEF", "GPTLSEDNLSYYKSQPGFQKMSADK"]
+idr_name = ["IDR1", "IDR2"]
+print(pm.predict_main(idr_list, idr_name))
+PY
+```
+
+**Windows PowerShell:**
+
+```
+docker run --rm --gpus all ghcr.io/tingtingligroup/phasemotif:latest -c `
+"import PhaseMotif as pm; `
+ idr_list=['MSVAKTPKTAENAEGGGGGGGGPPPPPPPKPHVNVGTIGPHEDTYYSEF','GPTLSEDNLSYYKSQPGFQKMSADK']; `
+ idr_name=['IDR1','IDR2']; `
+ print(pm.predict_main(idr_list,idr_name))"
+```
+
+------
+
+### 💡 Tips
+
+- Make sure your host has an **NVIDIA GPU** with the proper driver installed.
+- Install the **NVIDIA Container Toolkit** so that `--gpus all` works inside Docker:
+   https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+- The container runs a Python interpreter by default, so you can either start an interactive session (`-it`) or run inline scripts with `-c "..."`.
+
+
+
+
+
 
 # Function Documentation
 
@@ -66,7 +139,7 @@ import PhaseMotif as pm
 
 # Sample IDR sequences
 idr_list = [
-    "MSVAKTPKTAENAEKPHVNVGTIGPHEDTYYSEF",
+    "MSVAKTPKTAENAEGGGGGGGGPPPPPPPKPHVNVGTIGPHEDTYYSEF",
     "GPTLSEDNLSYYKSQPGFQKMSADK"
 ]
 idr_name = ["IDR1", "IDR2", ...]
@@ -112,7 +185,7 @@ The `predict_main` function predicts the results for a list of Intrinsically Dis
 ```python
 import PhaseMotif as pm
 
-idr_list = ["MSVAKTPKTAENAEKPHVNVGTIGPHEDTYYSEF", "GPTLSEDNLSYYKSQPGFQKMSADK"]
+idr_list = ["MSVAKTPKTAENAEGGGGGGGGPPPPPPPKPHVNVGTIGPHEDTYYSEF", "GPTLSEDNLSYYKSQPGFQKMSADK"]
 idr_name = ["IDR1", "IDR2"]
 
 # Predict without naming the sequences
