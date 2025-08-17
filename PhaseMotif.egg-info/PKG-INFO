@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PhaseMotif
-Version: 0.1
+Version: 1.0
 Requires-Python: >=3.8
 Requires-Dist: autocommand==2.2.2
 Requires-Dist: backports.tarfile==1.2.0
@@ -47,9 +47,6 @@ Requires-Dist: sympy==1.12
 Requires-Dist: tbb==2021.11.0
 Requires-Dist: threadpoolctl==3.2.0
 Requires-Dist: tomli==2.0.1
-Requires-Dist: torch==2.3.1+cu121
-Requires-Dist: torchaudio==2.3.1+cu121
-Requires-Dist: torchvision==0.18.1+cu121
 Requires-Dist: tqdm==4.66.5
 Requires-Dist: typeguard==4.3.0
 Requires-Dist: typing_extensions==4.10.0

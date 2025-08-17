@@ -14,8 +14,8 @@ conda create --name myenv python=3.8
 conda activate myenv
 
 # Step 3: Install the specified versions of PyTorch and related libraries
-# The --index-url flag ensures the packages are fetched from the official PyTorch repository
-pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu121
+conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=12.1 -c pytorch -c nvidia
+# Note: If the download fails, please visit the official PyTorch website (https://pytorch.org/) to find and install the PyTorch version that matches your CUDA version.
 
 # Step 4: Clone the PhaseMotif repository from GitHub
 git clone https://github.com/TingtingLiGroup/PhaseMotif.git

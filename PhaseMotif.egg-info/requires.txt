@@ -43,9 +43,6 @@ sympy==1.12
 tbb==2021.11.0
 threadpoolctl==3.2.0
 tomli==2.0.1
-torch==2.3.1+cu121
-torchaudio==2.3.1+cu121
-torchvision==0.18.1+cu121
 tqdm==4.66.5
 typeguard==4.3.0
 typing_extensions==4.10.0

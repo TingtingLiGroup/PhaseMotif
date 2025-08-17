@@ -16,7 +16,7 @@ from .utils.checkGenerate import calculate_distance
 # 文件路径
 current_dir = os.path.dirname(__file__)
 MODEL_PATH = os.path.abspath(os.path.join(current_dir, 'model_save/8.pth'))
-AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+AMINO = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y', 'U']
 
 
 def cluster(seq_list):
@@ -112,40 +112,64 @@ def analyse_main(idr_list, idr_name=None, paint=False):
     for idr, idr_name in zip(idr_list, idr_name_list):
         # 检查idr的长度
         if len(idr) < 50:
-            raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
-        # 检查idr的字符是否属于字符列表animo
+            error_msg = f"Error: The length of IDR is less than 50."
+            print(error_msg)
+            analyse_result_df.append([idr_name, idr, [], [], [], [], []])
+            continue  # 跳过当前循环，处理下一个
+        # 检查idr的字符是否属于字符列表AMINO
         if not all(char in AMINO for char in idr):
-            raise ValueError(f"Error: The IDR '{idr}' contains characters not in AMINO.")
-        data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
-        data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
-        label = torch.tensor([1]).float()
-        protein = 'test'
-        loader = [([data_one_hot], [data_alphabet], [label], [protein])]
+            error_msg = f"Error: IDR contains characters not in AMINO."
+            print(error_msg)
+            analyse_result_df.append([idr_name, idr, [], [], [], [], []])
+            continue  # 跳过当前循环，处理下一个
 
-        result, position = gdp.visualize(loader=loader, device=device, divide=0,
-                                         feature=True)  # result是全部重要位置，position是每15个重要位置的起点
-        seq, choose_result = gdp.visualize(loader=loader, device=device, divide=0,
-                                           feature=False)  # seq是关键序列，choose_result是关键序列的重要位置
-        result = result['Feature'].tolist()[0]
-        position = position['Position'].tolist()[0]
-        seq = seq['Feature'].tolist()[0]
-        choose_result = choose_result['Position'].tolist()[0]
+        try:
+            data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
+            data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
+            label = torch.tensor([1]).float()
+            protein = 'test'
+            loader = [([data_one_hot], [data_alphabet], [label], [protein])]
 
-        all_list = list(range(len(idr)))
-        density = [result.count(i) / len(result) for i in all_list]
-        density = [i / max(density) for i in density]
-        times = [position.count(i) / sum(position) for i in all_list]
-        times = [i / max(times) for i in times]
-        # choose_result = [list(set(choose_result)).count(i) for i in all_list]
+            result, position = gdp.visualize(loader=loader, device=device, divide=0,
+                                             feature=True)  # result是全部重要位置，position是每15个重要位置的起点
+            seq, choose_result = gdp.visualize(loader=loader, device=device, divide=0,
+                                               feature=False)  # seq是关键序列，choose_result是关键序列的重要位置
+            result = result['Feature'].tolist()[0]
+            position = position['Position'].tolist()[0]
+            seq = seq['Feature'].tolist()[0]
+            choose_result = choose_result['Position'].tolist()[0]
 
-        if paint:
-            pic(idr_name, idr, density, times, choose_result)
+            all_list = list(range(len(idr)))
+            density = [result.count(i) / len(result) for i in all_list]
+            density = [i / max(density) for i in density]
+            times = [position.count(i) / sum(position) for i in all_list]
+            times = [i / max(times) for i in times]
+            # choose_result = [list(set(choose_result)).count(i) for i in all_list]
 
-        seq = seq.split('_')
-        seq = [i for i in seq if i != '']
-        cluster_label = cluster(seq)
+            if paint:
+                pic(idr_name, idr, density, times, choose_result)
 
-        analyse_result_df.append([idr_name, idr, density, choose_result, times, cluster_label, seq])
+            seq = seq.split('_')
+            seq = [i for i in seq if i != '']
+            cluster_label = cluster(seq)
+
+            analyse_result_df.append([idr_name, idr, density, choose_result, times, cluster_label, seq])
+
+        except Exception as e:
+            # 输出错误信息和提示
+            print(f"处理IDR '{idr_name}' 时失败: {str(e)}")
+            print(f"请检查IDR '{idr_name}' 的打分是否高于0.5")
+
+            # 填充空值到结果列表
+            analyse_result_df.append([
+                idr_name,
+                idr,
+                [],  # density的空值
+                [],  # choose_result的空值
+                [],  # times的空值
+                None,  # cluster_label的空值
+                []  # seq的空值
+            ])
 
     analyse_result_df = pd.DataFrame(analyse_result_df, columns=['IDR Name', 'IDR', 'Density', 'Choose_result', 'Times', 'Cluster_label', 'Key Region'])
     save_df = analyse_result_df.loc[:, ['IDR Name', 'IDR', 'Key Region', 'Cluster_label']]
@@ -183,18 +207,34 @@ def predict_main(idr_list, idr_name=None):
 
     predict_result_list = []
     for idr, idr_name in zip(idr_list, idr_name_list):
-        # 检查idr的长度
-        if len(idr) < 50:
-            raise ValueError(f"Error: The length of IDR '{idr}' is less than 50.")
-        # 检查idr的字符是否属于字符列表animo
-        if not all(char in AMINO for char in idr):
-            raise ValueError(f"Error: The IDR '{idr}' contains characters not in AMINO.")
-        data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
-        data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
-        result = model([data_one_hot], [data_alphabet], device)
-        predict_result = torch.sigmoid(result[0]).item()
+        try:
+            # 检查idr的长度
+            if len(idr) < 50:
+                error_msg = f"Error: The length of IDR is less than 50."
+                print(error_msg)
+                predict_result_list.append([idr_name, idr, error_msg])
+                continue  # 跳过当前循环，处理下一个
 
-        predict_result_list.append([idr_name, idr, predict_result])
+            # 检查idr的字符是否属于字符列表AMINO
+            if not all(char in AMINO for char in idr):
+                error_msg = f"Error: IDR contains characters not in AMINO."
+                print(error_msg)
+                predict_result_list.append([idr_name, idr, error_msg])
+                continue  # 跳过当前循环，处理下一个
+
+            # 处理正常数据
+            data_one_hot = torch.tensor(seq2Matrix(idr, 'onehot')).unsqueeze(0).float()
+            data_alphabet = torch.tensor((seq2Matrix(idr, 'alphabet'))).unsqueeze(0).float()
+            result = model([data_one_hot], [data_alphabet], device)
+            predict_result = torch.sigmoid(result[0]).item()
+
+            predict_result_list.append([idr_name, idr, predict_result])
+
+        except Exception as e:
+            # 捕获其他可能的异常并记录
+            error_msg = f"Error: {str(e)}"
+            print(error_msg)
+            predict_result_list.append([idr_name, idr, error_msg])
 
     predict_result_list = pd.DataFrame(predict_result_list, columns=['IDR Name', 'IDR', 'Predict Score'])
     predict_result_list.to_csv('PM_analyse/PM_predict_result.csv', index=False)

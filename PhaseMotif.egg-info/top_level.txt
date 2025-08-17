@@ -1,4 +1,3 @@
-PM_analyse
 PhaseMotif
 build
 dist

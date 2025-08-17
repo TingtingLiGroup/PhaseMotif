@@ -6,7 +6,7 @@ INSTALL_PACKAGES = open(path.join(DIR,  'requirements.txt'), encoding='utf-8').r
 
 setup(
     name="PhaseMotif",
-    version="0.1",
+    version="1.0",
     packages=find_namespace_packages(),
     include_package_data=True,
     install_requires=INSTALL_PACKAGES,
