@@ -2,9 +2,10 @@ name: Build and Publish Docker image
 
 on:
   push:
-    branches: [ "main" ]
-  tags:
-    - "v*"
+    branches:
+      - main          # 推 main 分支触发（发布 :latest）
+    tags:
+      - 'v*'          # 推以 v 开头的 tag 也触发（发布 :vX.Y.Z）
 
 jobs:
   build:
@@ -26,7 +27,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
+      - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
