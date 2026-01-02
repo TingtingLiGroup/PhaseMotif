@@ -64,7 +64,7 @@ print(df)
 
 ### Run a one-liner script
 
-**Linux/macOS:**
+**Linux**
 
 ```
 docker run --rm --gpus all ghcr.io/tingtingligroup/phasemotif:latest - <<'PY'
