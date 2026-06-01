@@ -1,6 +1,8 @@
 # Introduction to PhaseMotif
 PhaseMotif is a sequence-based PS IDR classifier built with interpretable deep attention framework. Phase separation is crucial for the formation of biomolecular condensates, which play key roles in regulating cellular activities such as gene expression and signal transduction. This repository provides the source code for PhaseMotif, enabling researchers to explore and analyze key regions within IDRs that drive phase separation.
 
+📄 **This work has been published** — see the [Citation](#citation) section for the full reference.
+
 To make it even easier to use, please visit the [PhaseMotif Website](http://predict.phasemotif.pro/)
 
 
