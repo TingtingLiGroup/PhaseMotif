@@ -240,3 +240,24 @@ print(result_df)
 + Merges sequences based on the specified overlap and retains sequences that match the target cluster.
 + Saves the results to `PM_generate/generate_{cluster}.csv`. If the file exists, it appends the data; otherwise, it creates a new file.
 + You can further manipulate the resulting DataFrame as needed.
+
+
+
+# Citation
+
+If you use PhaseMotif in your research, please cite:
+
+> H. Yang, K. You, L. Ma, X. Wang, G. Pei, T. Li, Interpretable and generative deep learning models explicate phase separating intrinsically disordered motifs, *Nat Commun* **17** (2026) 2571. https://doi.org/10.1038/s41467-026-69252-z
+
+```bibtex
+@article{Yang2026PhaseMotif,
+  author  = {Yang, H. and You, K. and Ma, L. and Wang, X. and Pei, G. and Li, T.},
+  title   = {Interpretable and generative deep learning models explicate phase separating intrinsically disordered motifs},
+  journal = {Nature Communications},
+  volume  = {17},
+  pages   = {2571},
+  year    = {2026},
+  doi     = {10.1038/s41467-026-69252-z},
+  url     = {https://doi.org/10.1038/s41467-026-69252-z}
+}
+```
